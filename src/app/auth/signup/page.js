@@ -8,8 +8,12 @@ import FormInput from "@/components/share/form/FormInput";
 import { registerValdation } from "@/components/share/validation/registerValdation";
 import Image from "next/image";
 import Link from "next/link";
-
+import AuthServices from "@/services/authService";
+import { useRouter } from "next/navigation";
+import { successMsg } from "@/components/toaster/msg";
+import Cookies from "js-cookie";
 export default function SignUp() {
+  const router = useRouter();
   const {
     control,
     handleSubmit,
@@ -24,15 +28,17 @@ export default function SignUp() {
   });
 
   const onSubmit = async (data) => {
-    console.log("Submitted Data:", data);
-    alert("Register Successful");
-
-    // Make API request if needed
-    // const res = await fetch("/api/auth/login", {
-    //   method: "POST",
-    //   body: JSON.stringify(data),
-    // });
-    // const response = await res.json();
+    try {
+      const res = await AuthServices.registerApi(data.email, data.password);
+      console.log("Submitted Data:", res);
+      Cookies.set("userDetail", JSON.stringify(res.data), {
+        expires: 7,
+        sameSite: "Strict",
+      });
+      router.push("/");
+    } catch (error) {
+      console.log("error", error);
+    }
   };
 
   return (

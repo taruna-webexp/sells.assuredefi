@@ -1,8 +1,17 @@
 import apiCient from "./apiCient";
 
 const AuthServices = {
-  loginApi: () => {
-    return apiCient.post("");
+  registerApi: (email, password) => {
+    console.log("emil", email);
+    console.log("emil2", password);
+
+    return apiCient.post("/auth/signUpWithAuth0", {
+      email,
+      password,
+    });
+  },
+  loginApi: (data) => {
+    return apiCient.post(`/auth/loginWithAuth0`, data);
   },
 };
 

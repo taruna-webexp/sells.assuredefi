@@ -6,9 +6,12 @@ import { Button, Box, Typography, Container } from "@mui/material";
 import FormInput from "@/components/share/form/FormInput";
 import Image from "next/image";
 import { loginValidationSchema } from "@/components/share/validation/loginValidation";
-import Link from "next/link";
-
+import AuthServices from "@/services/authService";
+import { useRouter } from "next/navigation";
+import { successMsg } from "@/components/toaster/msg";
+import Cookies from "js-cookie";
 export default function Login() {
+  const router = useRouter();
   const {
     register,
     control,
@@ -24,14 +27,23 @@ export default function Login() {
 
   const onSubmit = async (data) => {
     console.log("Submitted Data:", data);
-    alert("Login Successful");
+    try {
+      const res = await AuthServices.loginApi(data);
+      Cookies.set("accessToken", JSON.stringify(res.data.access_token), {
+        expires: 7,
+        sameSite: "Strict",
+      });
+      Cookies.set("userDetail", JSON.stringify(res.data), {
+        expires: 7,
+        sameSite: "Strict",
+      });
 
-    // Make API request if needed
-    // const res = await fetch("/api/auth/login", {
-    //   method: "POST",
-    //   body: JSON.stringify(data),
-    // });
-    // const response = await res.json();
+      successMsg(res.message);
+
+      router.push("/");
+    } catch (error) {
+      console.log("error", error);
+    }
   };
 
   return (

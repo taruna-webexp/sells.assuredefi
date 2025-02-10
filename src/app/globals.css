@@ -17,6 +17,9 @@ body {
 .theme-color {
   color: #ddcc42 !important;
 }
+.theme-color-bg {
+  background-color: #ddcc42 !important;
+}
 .gradient-bg-sharp-login {
   background: #0a0724 !important;
 }
